@@ -76,6 +76,13 @@ Para reprocessar uma foto só depois de ajustar a ficha dela:
 python3 2_processar.py --somente IMG_0002
 ```
 
+Com vários clientes, cada um vira uma pasta com `config.json` e `prints/`, e o atalho `story-repost` roda a etapa desejada no config da pasta atual:
+
+```bash
+ln -s "$PWD/story-repost" ~/bin/story-repost   # uma vez
+cd ~/clientes/fulano && story-repost 1
+```
+
 ## Conduzindo com um agente
 
 Três decisões da etapa 1 dependem de ver a imagem: ler o @, medir os retângulos de texto e escolher o enquadramento. É exatamente o tipo de tarefa que um agente com visão (Claude Code, por exemplo) faz bem a partir de `_arrobas.png` e `_reguas/`. O [AGENTS.md](AGENTS.md) traz o roteiro pronto.

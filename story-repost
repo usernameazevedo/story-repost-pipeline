@@ -1,0 +1,16 @@
+#!/bin/sh
+# story-repost <1|2|3|4> [opcoes] - roda uma etapa do pipeline usando o config.json
+# da pasta atual. Instale com: ln -s /caminho/do/repo/story-repost ~/bin/story-repost
+set -e
+REPO=$(cd "$(dirname "$(readlink "$0" || echo "$0")")" && pwd)
+case "$1" in
+  1) ETAPA=1_recortar.py ;;
+  2) ETAPA=2_processar.py ;;
+  3) ETAPA=3_publicacoes.py ;;
+  4) ETAPA=4_preview.py ;;
+  *) echo "uso: story-repost <1|2|3|4> [opcoes]"; exit 1 ;;
+esac
+shift
+PY="$REPO/.venv/bin/python"
+[ -x "$PY" ] || PY=python3
+exec "$PY" "$REPO/$ETAPA" "$@"
