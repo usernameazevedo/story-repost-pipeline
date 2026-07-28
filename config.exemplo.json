@@ -1,0 +1,63 @@
+{
+  "cliente": "Nome do Cliente",
+  "perfil": "perfildocliente",
+  "local": "Cidade · Loja",
+  "subtitulo": "Repost de stories · 7 publicações · 14 fotos tratadas",
+  "hashtags": "#perfildocliente #campanha #cidade",
+
+  "entrada": "prints",
+  "saida": "saida",
+  "avatar": "saida/_avatar.png",
+
+  "formato": { "largura": 1080, "altura": 1350 },
+
+  "recorte_ui": { "x0": 0.00909, "y0": 0.12204, "x1": 0.99091, "y1": 0.87866 },
+  "cabecalho": { "x0": 0.18939, "y0": 0.09589, "x1": 0.80303, "y1": 0.12204 },
+
+  "retoque": {
+    "wb": 0.45,
+    "exposicao": 0.72,
+    "exposicao_max": 0.30,
+    "contraste": 0.10,
+    "vibrance": 0.14,
+    "clareza": 0.12,
+    "nitidez": 40,
+    "vinheta": 0.020
+  },
+
+  "fotos": {
+    "IMG_0001": {
+      "arroba": "clientefeliz",
+      "rot": 0,
+      "apagar": [],
+      "ancora": 0.21
+    },
+    "IMG_0002": {
+      "arroba": "outrocliente",
+      "rot": 0,
+      "apagar": [[0.09, 0.30, 0.56, 0.41]],
+      "ancora": 0.20
+    },
+    "IMG_0003": {
+      "arroba": "fotodeitada",
+      "rot": -90,
+      "apagar": [],
+      "ancora": 0.335
+    }
+  },
+
+  "posts": [
+    {
+      "slug": "01-primeiro-post",
+      "tema": "Tema curto do post",
+      "fotos": ["IMG_0001", "IMG_0002"],
+      "legenda": "Primeira linha da legenda.\n\nObrigado @clientefeliz e @outrocliente 💙"
+    },
+    {
+      "slug": "02-segundo-post",
+      "tema": "Outro tema",
+      "fotos": ["IMG_0003"],
+      "legenda": "Legenda do segundo post.\n\nFoto de @fotodeitada"
+    }
+  ]
+}

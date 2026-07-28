@@ -1,0 +1,10 @@
+config.json
+prints/
+saida/
+.venv/
+__pycache__/
+*.pyc
+*.jpg
+*.jpeg
+*.png
+!docs/*.png
