@@ -11,6 +11,14 @@
 
   "formato": { "largura": 1080, "altura": 1350 },
 
+  "selo": {
+    "ativo": true,
+    "tamanho": 0.030,
+    "margem": 0.026,
+    "opacidade": 0.65,
+    "fonte": null
+  },
+
   "recorte_ui": { "x0": 0.00909, "y0": 0.12204, "x1": 0.99091, "y1": 0.87866 },
   "cabecalho": { "x0": 0.18939, "y0": 0.09589, "x1": 0.80303, "y1": 0.12204 },
 

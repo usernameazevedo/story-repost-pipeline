@@ -32,6 +32,14 @@ PADRAO = {
         "nitidez": 40,
         "vinheta": 0.020,
     },
+    # selo com o @ do autor gravado na propria imagem (mesmo lugar da previa)
+    "selo": {
+        "ativo": False,
+        "tamanho": 0.030,     # altura da letra, em fracao da largura da imagem
+        "margem": 0.026,      # distancia da borda, em fracao da largura
+        "opacidade": 0.65,    # fundo da pilula
+        "fonte": None,        # caminho de um .ttf/.otf; sem isso usa a fonte do sistema
+    },
     "fotos": {},
     "posts": [],
 }

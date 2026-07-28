@@ -40,7 +40,7 @@ Olhe `saida/3_final/`. Duas checagens que pegam quase tudo:
 - monte uma folha de contato com todas as fotos e procure texto sobrando;
 - monte uma tira só com os 16% de cima e os 16% de baixo de cada foto, que é onde ficam os overlays que escapam do corte.
 
-Reprocesse foto a foto com `--somente NOME` até limpar.
+Reprocesse foto a foto com `--somente NOME` até limpar. Se o ajuste for de retoque, enquadramento ou selo, use `--reusar-limpo` para não repetir o inpainting.
 
 ## 4. Agrupar e escrever legenda
 

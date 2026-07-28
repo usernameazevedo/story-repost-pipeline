@@ -3,7 +3,7 @@
 """Etapa 2: apaga os textos do story, aplica um retoque leve e enquadra para o feed.
 
 Le de cada ficha do config:
-  arroba  @ de quem publicou o story (so vai para a legenda, nao entra na imagem)
+  arroba  @ de quem publicou o story (vai para a legenda e, com "selo", para a foto)
   rot     graus de rotacao antes de tudo (-90 gira no sentido horario)
   apagar  retangulos [x0, y0, x1, y1] em fracao da imagem recortada, apagados por inpainting
   ancora  posicao do recorte final: y0 em retrato, x0 em paisagem (fracao, 0 = topo/esquerda)
@@ -16,7 +16,7 @@ Gera saida/2_limpo (sem texto, resolucao cheia) e saida/3_final (JPEG no formato
 import os
 
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 import comum
 
@@ -117,6 +117,46 @@ def retoque(img: Image.Image, r: dict) -> Image.Image:
     return im.filter(ImageFilter.UnsharpMask(radius=1.6, percent=r["nitidez"], threshold=3))
 
 
+FONTES = (
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",   # macOS
+    "/Library/Fonts/Arial Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",  # Linux
+    "C:/Windows/Fonts/arialbd.ttf",                        # Windows
+)
+
+
+def fonte(caminho, px: int):
+    """Fonte em negrito no tamanho pedido, com queda para a fonte embutida do Pillow."""
+    for c in ([caminho] if caminho else []) + list(FONTES):
+        try:
+            return ImageFont.truetype(c, px)
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
+
+def selo(img: Image.Image, texto: str, cfg: dict) -> Image.Image:
+    """Grava o @ do autor numa pilula escura no canto inferior esquerdo."""
+    if not texto:
+        return img
+    w, h = img.size
+    px = max(12, round(cfg["tamanho"] * w))
+    margem = round(cfg["margem"] * w)
+    folga_x, folga_y = round(px * 0.75), round(px * 0.42)
+
+    f = fonte(cfg.get("fonte"), px)
+    camada = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    dc = ImageDraw.Draw(camada)
+    x0, y0, x1, y1 = dc.textbbox((0, 0), texto, font=f)
+    cx, cy = x1 - x0 + 2 * folga_x, y1 - y0 + 2 * folga_y
+    caixa = (margem, h - margem - cy, margem + cx, h - margem)
+    dc.rounded_rectangle(caixa, radius=cy // 2,
+                         fill=(0, 0, 0, round(255 * cfg["opacidade"])))
+    dc.text((caixa[0] + folga_x - x0, caixa[1] + folga_y - y0), texto,
+            font=f, fill=(255, 255, 255, 255))
+    return Image.alpha_composite(img.convert("RGBA"), camada).convert("RGB")
+
+
 def enquadra(img: Image.Image, ancora: float, larg: int, alt: int) -> Image.Image:
     """Recorta na proporcao do feed usando a ancora da ficha e entrega no tamanho final."""
     w, h = img.size
@@ -136,6 +176,8 @@ def main() -> None:
     p = comum.parser(__doc__.splitlines()[0])
     p.add_argument("--somente", nargs="*", metavar="NOME",
                    help="reprocessa apenas estes prints")
+    p.add_argument("--reusar-limpo", action="store_true",
+                   help="pula o inpainting e parte do que ja esta em saida/2_limpo")
     args = p.parse_args()
     cfg, base = comum.carrega(args.config)
 
@@ -149,7 +191,12 @@ def main() -> None:
         if args.somente and stem not in args.somente:
             continue
         f = comum.ficha(cfg, stem)
-        img = Image.open(os.path.join(d_in, stem + ".png")).convert("RGB")
+        pronto = os.path.join(d_limpo, stem + ".png")
+        if args.reusar_limpo and os.path.exists(pronto):
+            img = Image.open(pronto).convert("RGB")
+            f = {**f, "apagar": [], "rot": 0}
+        else:
+            img = Image.open(os.path.join(d_in, stem + ".png")).convert("RGB")
         if f["rot"]:
             img = img.rotate(f["rot"], expand=True)
 
@@ -164,8 +211,10 @@ def main() -> None:
             img = lama(img, Image.fromarray(mascara)).convert("RGB").crop((0, 0, w, h))
         img.save(os.path.join(d_limpo, stem + ".png"))
 
-        enquadra(retoque(img, cfg["retoque"]), f.get("ancora", 0.0), larg, alt) \
-            .save(os.path.join(d_final, stem + ".jpg"), quality=93, subsampling=0)
+        final = enquadra(retoque(img, cfg["retoque"]), f.get("ancora", 0.0), larg, alt)
+        if cfg["selo"]["ativo"] and f["arroba"]:
+            final = selo(final, "@" + f["arroba"], cfg["selo"])
+        final.save(os.path.join(d_final, stem + ".jpg"), quality=93, subsampling=0)
         print(stem, "ok", "@" + f["arroba"] if f["arroba"] else "(sem @)")
 
 

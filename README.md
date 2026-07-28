@@ -47,6 +47,8 @@ Para cada foto, na ordem: rotação (prints de foto deitada), apagamento do text
 
 Todos os valores estão em `retoque` no config.
 
+**Selo do @.** Com `selo.ativo`, o @ do autor é gravado na própria foto numa pílula escura no canto inferior esquerdo, no mesmo lugar e proporção em que aparece na prévia. Tamanho, margem e opacidade são frações da largura, então o selo acompanha qualquer formato de saída. Com o selo ligado, a prévia deixa de desenhar a etiqueta dela para não duplicar.
+
 **Enquadrar.** Corte na proporção do feed (padrão 4:5, 1080x1350) usando `ancora` como posição da janela: em foto em pé é o topo do corte, em foto deitada é a margem esquerda. É esse número que decide o que entra e o que fica de fora.
 
 ### 3. Publicações — `3_publicacoes.py`
@@ -74,6 +76,12 @@ Para reprocessar uma foto só depois de ajustar a ficha dela:
 
 ```bash
 python3 2_processar.py --somente IMG_0002
+```
+
+Para mexer só em retoque, enquadramento ou selo sem repetir o inpainting (que é a parte lenta), parta do que já está limpo:
+
+```bash
+python3 2_processar.py --reusar-limpo
 ```
 
 Com vários clientes, cada um vira uma pasta com `config.json` e `prints/`, e o atalho `story-repost` roda a etapa desejada no config da pasta atual:

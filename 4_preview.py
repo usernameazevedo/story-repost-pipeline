@@ -105,6 +105,7 @@ def main() -> None:
     if not avatar:
         avatar = html.escape(perfil[:1].upper())
 
+    gravado = cfg["selo"]["ativo"]   # com o selo na foto, a previa nao repete a etiqueta
     blocos, inicia = [], []
     for i, post in enumerate(cfg["posts"], 1):
         d = os.path.join(d_pub, post["slug"])
@@ -117,7 +118,7 @@ def main() -> None:
             Image.open(os.path.join(d, f)).save(os.path.join(d_ass, destino),
                                                 quality=84, optimize=True)
             slides.append('<img src="assets/%s" data-autor="%s" alt="">'
-                          % (destino, html.escape(autor)))
+                          % (destino, "" if gravado else html.escape(autor)))
         texto = io.open(os.path.join(d, "legenda.txt"), encoding="utf-8").read().strip()
         blocos.append("""
   <div class="etiqueta">Publicação %d %s</div>
