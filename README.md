@@ -108,7 +108,7 @@ O material é de terceiros. Marcar a marca em um story não é, por si só, auto
 ## Author
 
 Built by **Luis Azevedo** — available for freelance / consulting work on video, short-form content, and automation.
-📬 [username.azevedo@gmail.com](mailto:username.azevedo@gmail.com)
+📬 [contato@midianoxx.com](mailto:contato@midianoxx.com)
 
 ## Licença
 
